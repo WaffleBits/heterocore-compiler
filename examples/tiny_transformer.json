@@ -1,0 +1,77 @@
+{
+  "model": {
+    "name": "tiny-transformer-block",
+    "description": "One synthetic transformer block used to exercise partitioning."
+  },
+  "operators": [
+    {
+      "id": "token_embedding",
+      "type": "embedding",
+      "dimensions": {"m": 128, "k": 1, "n": 256},
+      "weight_bits": 8
+    },
+    {
+      "id": "q_projection",
+      "type": "linear",
+      "dimensions": {"m": 128, "k": 256, "n": 256},
+      "weight_bits": 4
+    },
+    {
+      "id": "k_projection",
+      "type": "linear",
+      "dimensions": {"m": 128, "k": 256, "n": 256},
+      "weight_bits": 4
+    },
+    {
+      "id": "v_projection",
+      "type": "linear",
+      "dimensions": {"m": 128, "k": 256, "n": 256},
+      "weight_bits": 4
+    },
+    {
+      "id": "attention_scores",
+      "type": "matmul",
+      "dimensions": {"m": 128, "k": 256, "n": 128},
+      "weight_bits": 8,
+      "accuracy_sensitive": true
+    },
+    {
+      "id": "softmax",
+      "type": "softmax",
+      "dimensions": {"m": 128, "k": 128, "n": 128},
+      "weight_bits": 16
+    },
+    {
+      "id": "output_projection",
+      "type": "linear",
+      "dimensions": {"m": 128, "k": 256, "n": 256},
+      "weight_bits": 4
+    },
+    {
+      "id": "layer_norm",
+      "type": "layer_norm",
+      "dimensions": {"m": 128, "k": 256, "n": 256},
+      "weight_bits": 16,
+      "accuracy_sensitive": true
+    },
+    {
+      "id": "ffn_up",
+      "type": "linear",
+      "dimensions": {"m": 128, "k": 256, "n": 1024},
+      "weight_bits": 4
+    },
+    {
+      "id": "gelu",
+      "type": "gelu",
+      "dimensions": {"m": 128, "k": 1024, "n": 1024},
+      "weight_bits": 16
+    },
+    {
+      "id": "ffn_down",
+      "type": "linear",
+      "dimensions": {"m": 128, "k": 1024, "n": 256},
+      "weight_bits": 4
+    }
+  ]
+}
+

@@ -1,0 +1,300 @@
+{
+  "schema_version": "heterocore.execution_plan.v1",
+  "generated_at": "2026-06-12T17:17:09.643559+00:00",
+  "model": {
+    "name": "tiny-transformer-block",
+    "operator_count": 11
+  },
+  "hardware": {
+    "analog_array_rows": 128,
+    "analog_array_cols": 128,
+    "analog_adc_cycles": 4,
+    "digital_mac_units": 256,
+    "clock_mhz": 500,
+    "analog_mac_energy_pj": 0.12,
+    "digital_mac_energy_pj": 1.8,
+    "sram_byte_energy_pj": 5.0,
+    "dram_byte_energy_pj": 120.0
+  },
+  "policy": {
+    "minimum_analog_macs": 65536,
+    "maximum_analog_weight_bits": 8,
+    "supported_analog_ops": [
+      "matmul",
+      "linear"
+    ]
+  },
+  "summary": {
+    "total_macs": 104857600,
+    "analog_macs": 100663296,
+    "analog_mac_fraction": 0.96,
+    "estimated_cycles": 41792,
+    "estimated_latency_us": 83.584,
+    "estimated_energy_uj": 30.499768,
+    "digital_baseline_energy_uj": 201.580186,
+    "projected_energy_reduction": 0.848697,
+    "mapped_memory_traffic_bytes": 2097408,
+    "digital_baseline_memory_traffic_bytes": 2490624,
+    "projected_memory_traffic_reduction": 0.157879
+  },
+  "operators": [
+    {
+      "sequence": 0,
+      "id": "token_embedding",
+      "type": "embedding",
+      "dimensions": {
+        "m": 128,
+        "k": 1,
+        "n": 256
+      },
+      "weight_bits": 8,
+      "macs": 0,
+      "target": "digital",
+      "reason": "operator is not supported by the analog backend",
+      "estimate": {
+        "cycles": 128,
+        "latency_us": 0.256,
+        "compute_energy_pj": 58982.4,
+        "memory_energy_pj": 328960.0,
+        "total_energy_pj": 387942.4,
+        "weight_bytes": 0,
+        "memory_traffic_bytes": 65792
+      }
+    },
+    {
+      "sequence": 1,
+      "id": "q_projection",
+      "type": "linear",
+      "dimensions": {
+        "m": 128,
+        "k": 256,
+        "n": 256
+      },
+      "weight_bits": 4,
+      "macs": 8388608,
+      "target": "analog",
+      "reason": "matrix operation satisfies analog mapping policy",
+      "estimate": {
+        "cycles": 2048,
+        "latency_us": 4.096,
+        "compute_energy_pj": 1006632.96,
+        "memory_energy_pj": 655360.0,
+        "total_energy_pj": 1661992.96,
+        "weight_bytes": 32768,
+        "memory_traffic_bytes": 131072
+      }
+    },
+    {
+      "sequence": 2,
+      "id": "k_projection",
+      "type": "linear",
+      "dimensions": {
+        "m": 128,
+        "k": 256,
+        "n": 256
+      },
+      "weight_bits": 4,
+      "macs": 8388608,
+      "target": "analog",
+      "reason": "matrix operation satisfies analog mapping policy",
+      "estimate": {
+        "cycles": 2048,
+        "latency_us": 4.096,
+        "compute_energy_pj": 1006632.96,
+        "memory_energy_pj": 655360.0,
+        "total_energy_pj": 1661992.96,
+        "weight_bytes": 32768,
+        "memory_traffic_bytes": 131072
+      }
+    },
+    {
+      "sequence": 3,
+      "id": "v_projection",
+      "type": "linear",
+      "dimensions": {
+        "m": 128,
+        "k": 256,
+        "n": 256
+      },
+      "weight_bits": 4,
+      "macs": 8388608,
+      "target": "analog",
+      "reason": "matrix operation satisfies analog mapping policy",
+      "estimate": {
+        "cycles": 2048,
+        "latency_us": 4.096,
+        "compute_energy_pj": 1006632.96,
+        "memory_energy_pj": 655360.0,
+        "total_energy_pj": 1661992.96,
+        "weight_bytes": 32768,
+        "memory_traffic_bytes": 131072
+      }
+    },
+    {
+      "sequence": 4,
+      "id": "attention_scores",
+      "type": "matmul",
+      "dimensions": {
+        "m": 128,
+        "k": 256,
+        "n": 128
+      },
+      "weight_bits": 8,
+      "macs": 4194304,
+      "target": "digital",
+      "reason": "operator is marked accuracy-sensitive",
+      "estimate": {
+        "cycles": 16384,
+        "latency_us": 32.768,
+        "compute_energy_pj": 7549747.2,
+        "memory_energy_pj": 655360.0,
+        "total_energy_pj": 8205107.2,
+        "weight_bytes": 32768,
+        "memory_traffic_bytes": 131072
+      }
+    },
+    {
+      "sequence": 5,
+      "id": "softmax",
+      "type": "softmax",
+      "dimensions": {
+        "m": 128,
+        "k": 128,
+        "n": 128
+      },
+      "weight_bits": 16,
+      "macs": 0,
+      "target": "digital",
+      "reason": "operator is not supported by the analog backend",
+      "estimate": {
+        "cycles": 64,
+        "latency_us": 0.128,
+        "compute_energy_pj": 29491.2,
+        "memory_energy_pj": 327680.0,
+        "total_energy_pj": 357171.2,
+        "weight_bytes": 0,
+        "memory_traffic_bytes": 65536
+      }
+    },
+    {
+      "sequence": 6,
+      "id": "output_projection",
+      "type": "linear",
+      "dimensions": {
+        "m": 128,
+        "k": 256,
+        "n": 256
+      },
+      "weight_bits": 4,
+      "macs": 8388608,
+      "target": "analog",
+      "reason": "matrix operation satisfies analog mapping policy",
+      "estimate": {
+        "cycles": 2048,
+        "latency_us": 4.096,
+        "compute_energy_pj": 1006632.96,
+        "memory_energy_pj": 655360.0,
+        "total_energy_pj": 1661992.96,
+        "weight_bytes": 32768,
+        "memory_traffic_bytes": 131072
+      }
+    },
+    {
+      "sequence": 7,
+      "id": "layer_norm",
+      "type": "layer_norm",
+      "dimensions": {
+        "m": 128,
+        "k": 256,
+        "n": 256
+      },
+      "weight_bits": 16,
+      "macs": 0,
+      "target": "digital",
+      "reason": "operator is not supported by the analog backend",
+      "estimate": {
+        "cycles": 128,
+        "latency_us": 0.256,
+        "compute_energy_pj": 58982.4,
+        "memory_energy_pj": 655360.0,
+        "total_energy_pj": 714342.4,
+        "weight_bytes": 0,
+        "memory_traffic_bytes": 131072
+      }
+    },
+    {
+      "sequence": 8,
+      "id": "ffn_up",
+      "type": "linear",
+      "dimensions": {
+        "m": 128,
+        "k": 256,
+        "n": 1024
+      },
+      "weight_bits": 4,
+      "macs": 33554432,
+      "target": "analog",
+      "reason": "matrix operation satisfies analog mapping policy",
+      "estimate": {
+        "cycles": 8192,
+        "latency_us": 16.384,
+        "compute_energy_pj": 4026531.84,
+        "memory_energy_pj": 1638400.0,
+        "total_energy_pj": 5664931.84,
+        "weight_bytes": 131072,
+        "memory_traffic_bytes": 327680
+      }
+    },
+    {
+      "sequence": 9,
+      "id": "gelu",
+      "type": "gelu",
+      "dimensions": {
+        "m": 128,
+        "k": 1024,
+        "n": 1024
+      },
+      "weight_bits": 16,
+      "macs": 0,
+      "target": "digital",
+      "reason": "operator is not supported by the analog backend",
+      "estimate": {
+        "cycles": 512,
+        "latency_us": 1.024,
+        "compute_energy_pj": 235929.6,
+        "memory_energy_pj": 2621440.0,
+        "total_energy_pj": 2857369.6,
+        "weight_bytes": 0,
+        "memory_traffic_bytes": 524288
+      }
+    },
+    {
+      "sequence": 10,
+      "id": "ffn_down",
+      "type": "linear",
+      "dimensions": {
+        "m": 128,
+        "k": 1024,
+        "n": 256
+      },
+      "weight_bits": 4,
+      "macs": 33554432,
+      "target": "analog",
+      "reason": "matrix operation satisfies analog mapping policy",
+      "estimate": {
+        "cycles": 8192,
+        "latency_us": 16.384,
+        "compute_energy_pj": 4026531.84,
+        "memory_energy_pj": 1638400.0,
+        "total_energy_pj": 5664931.84,
+        "weight_bytes": 131072,
+        "memory_traffic_bytes": 327680
+      }
+    }
+  ],
+  "claim_scope": {
+    "classification": "analytical projection",
+    "measured_hardware": false,
+    "notes": "Values come from the configured cost model, not fabricated silicon."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/WaffleBits/heterocore-compiler/schemas/execution-plan-v1.schema.json",
+  "title": "HeteroCore Execution Plan v1",
+  "type": "object",
+  "required": ["schema_version", "model", "hardware", "summary", "operators", "claim_scope"],
+  "properties": {
+    "schema_version": {"const": "heterocore.execution_plan.v1"},
+    "model": {
+      "type": "object",
+      "required": ["name", "operator_count"]
+    },
+    "operators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sequence", "id", "type", "target", "estimate"],
+        "properties": {
+          "target": {"enum": ["analog", "digital"]}
+        }
+      }
+    },
+    "claim_scope": {
+      "type": "object",
+      "required": ["classification", "measured_hardware"]
+    }
+  }
+}
+
