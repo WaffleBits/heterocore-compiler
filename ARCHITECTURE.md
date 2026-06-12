@@ -1,6 +1,6 @@
 # Architecture
 
-HeteroCore Compiler turns a framework-neutral graph description into
+HeteroCore Compiler turns a framework-neutral JSON graph or ONNX model into
 `heterocore.execution_plan.v1`. The plan is the contract between the five
 HeteroCore repositories.
 
@@ -29,11 +29,13 @@ search-based or learned partitioners, not a claim of optimal placement.
 
 ## Cost model
 
-The cost model estimates cycles, compute energy, and memory traffic from
-explicit hardware parameters. Analog weights are treated as resident in the
-crossbar, so mapped operations avoid weight reads in the traffic estimate.
+The cost model estimates cycles, compute energy, peripheral energy, memory
+traffic, and interconnect energy from explicit hardware parameters. Analog
+weights are treated as resident in the crossbar, so mapped operations avoid
+weight reads in the traffic estimate. Analog operations are charged separately
+for DAC conversions, ADC conversions, partial-sum accumulation, array control,
+and calibration.
 
 All generated values are analytical projections. The schema carries
 `claim_scope.measured_hardware=false` so downstream dashboards cannot silently
 present them as lab measurements.
-

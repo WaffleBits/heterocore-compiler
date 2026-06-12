@@ -21,10 +21,11 @@ flowchart LR
 
 ## What It Demonstrates
 
-- Framework-neutral operator graph ingestion.
+- Framework-neutral JSON graph ingestion and direct ONNX import.
 - Explainable analog-versus-digital partitioning.
 - Configurable array, digital MAC, clock, and energy assumptions.
 - Per-operator cycle, energy, and memory-traffic estimates.
+- Explicit DAC, ADC, accumulation, calibration, control, and interconnect energy.
 - A JSON Schema-backed cross-repository execution plan.
 - Automated tests and a reproducible sample workload.
 
@@ -38,11 +39,16 @@ block with default hardware assumptions:
 | operators | 11 |
 | analog-mapped operators | 6 |
 | analog MAC fraction | 96.0% |
-| projected energy reduction vs. all-digital model | 84.87% |
+| projected energy reduction vs. all-digital model | 68.30% |
 | projected memory-traffic reduction | 15.79% |
 
 These are analytical cost-model outputs. The input, assumptions, placement
 reasons, and per-operator estimates are all present in the result file.
+
+The ONNX transformer result is deliberately less favorable: 81.7% of MACs map
+to analog, but the nominal peripheral-aware model projects only a 7.4% energy
+reduction. `results/energy_sensitivity.json` shows how that conclusion changes
+under optimistic, nominal, and conservative converter/control assumptions.
 
 ## Quick Start
 
@@ -55,6 +61,16 @@ heterocore-compile examples/tiny_transformer.json \
 ```
 
 On PowerShell, activate with `.venv\Scripts\Activate.ps1`.
+
+Compile the checked-in ONNX transformer:
+
+```bash
+pip install -e ".[onnx]"
+heterocore-compile examples/tiny_char_transformer.onnx \
+  -o results/tiny_char_transformer.plan.json \
+  --onnx-weight-bits 4 \
+  --minimum-analog-macs 16000
+```
 
 The command prints the analog MAC fraction and projected energy reduction. The
 full assumptions and per-operator decisions are saved in the output plan.
@@ -77,8 +93,9 @@ The minimal graph format is intentionally small:
 }
 ```
 
-An ONNX or PyTorch adapter can normalize into this representation without
-changing downstream tools.
+ONNX models are imported directly using ONNX shape inference. Initializer-backed
+matrix operations preserve their weight names in the execution plan so the
+analog simulator can replace the exact selected tensors.
 
 ## Reproduce the Evidence
 
@@ -90,6 +107,7 @@ heterocore-compile examples/tiny_transformer.json \
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for partitioning and cost-model details.
 See [docs/INTEGRATION.md](docs/INTEGRATION.md) for the five-repository workflow.
+See [docs/BRANDING.md](docs/BRANDING.md) for the temporary project-name policy.
 
 ## Claim Boundaries
 

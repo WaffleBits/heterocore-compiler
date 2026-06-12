@@ -35,7 +35,21 @@ class CompilerTests(unittest.TestCase):
         self.assertGreater(summary["projected_memory_traffic_reduction"], 0)
         self.assertGreater(summary["projected_energy_reduction"], 0)
 
+    def test_peripheral_energy_is_reported(self):
+        graph = ModelGraph("test", (Operator("linear", "linear", 64, 256, 256, 4),))
+        plan = compile_graph(graph)
+        estimate = plan["operators"][0]["estimate"]
+        self.assertGreater(estimate["peripheral_energy_pj"], 0)
+        self.assertIn("energy_breakdown_pj", plan["summary"])
+
+    def test_expensive_adc_can_erase_analog_advantage(self):
+        graph = ModelGraph("test", (Operator("linear", "linear", 64, 256, 256, 4),))
+        plan = compile_graph(
+            graph,
+            HardwareConfig(adc_conversion_energy_pj=500.0),
+        )
+        self.assertLess(plan["summary"]["projected_energy_reduction"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()
-

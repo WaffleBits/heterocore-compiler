@@ -1,0 +1,105 @@
+{
+  "schema_version": "heterocore.energy_sensitivity.v1",
+  "model": "tiny-char-transformer",
+  "source": "examples\\tiny_char_transformer.onnx",
+  "scenarios": [
+    {
+      "name": "optimistic_peripherals",
+      "hardware": {
+        "analog_array_rows": 128,
+        "analog_array_cols": 128,
+        "analog_adc_cycles": 4,
+        "digital_mac_units": 256,
+        "clock_mhz": 500,
+        "analog_mac_energy_pj": 0.12,
+        "digital_mac_energy_pj": 1.8,
+        "dac_conversion_energy_pj": 1.0,
+        "adc_conversion_energy_pj": 10.0,
+        "analog_accumulation_energy_pj": 1.0,
+        "analog_control_energy_pj_per_tile": 200.0,
+        "analog_calibration_energy_pj_per_array": 1000.0,
+        "digital_control_energy_pj_per_cycle": 2.0,
+        "interconnect_byte_energy_pj": 0.1,
+        "sram_byte_energy_pj": 5.0,
+        "dram_byte_energy_pj": 120.0
+      },
+      "analog_mac_fraction": 0.817404,
+      "estimated_energy_uj": 1.32345,
+      "digital_baseline_energy_uj": 2.086094,
+      "projected_energy_reduction": 0.365585,
+      "energy_breakdown_pj": {
+        "compute_energy_pj": 330128.64,
+        "peripheral_energy_pj": 275568.0,
+        "memory_energy_pj": 703680.0,
+        "interconnect_energy_pj": 14073.6
+      }
+    },
+    {
+      "name": "nominal_peripherals",
+      "hardware": {
+        "analog_array_rows": 128,
+        "analog_array_cols": 128,
+        "analog_adc_cycles": 4,
+        "digital_mac_units": 256,
+        "clock_mhz": 500,
+        "analog_mac_energy_pj": 0.12,
+        "digital_mac_energy_pj": 1.8,
+        "dac_conversion_energy_pj": 2.5,
+        "adc_conversion_energy_pj": 35.0,
+        "analog_accumulation_energy_pj": 1.0,
+        "analog_control_energy_pj_per_tile": 500.0,
+        "analog_calibration_energy_pj_per_array": 5000.0,
+        "digital_control_energy_pj_per_cycle": 2.0,
+        "interconnect_byte_energy_pj": 0.25,
+        "sram_byte_energy_pj": 5.0,
+        "dram_byte_energy_pj": 120.0
+      },
+      "analog_mac_fraction": 0.817404,
+      "estimated_energy_uj": 1.951601,
+      "digital_baseline_energy_uj": 2.10858,
+      "projected_energy_reduction": 0.074448,
+      "energy_breakdown_pj": {
+        "compute_energy_pj": 330128.64,
+        "peripheral_energy_pj": 882608.0,
+        "memory_energy_pj": 703680.0,
+        "interconnect_energy_pj": 35184.0
+      }
+    },
+    {
+      "name": "conservative_peripherals",
+      "hardware": {
+        "analog_array_rows": 128,
+        "analog_array_cols": 128,
+        "analog_adc_cycles": 4,
+        "digital_mac_units": 256,
+        "clock_mhz": 500,
+        "analog_mac_energy_pj": 0.12,
+        "digital_mac_energy_pj": 1.8,
+        "dac_conversion_energy_pj": 8.0,
+        "adc_conversion_energy_pj": 120.0,
+        "analog_accumulation_energy_pj": 3.0,
+        "analog_control_energy_pj_per_tile": 1200.0,
+        "analog_calibration_energy_pj_per_array": 20000.0,
+        "digital_control_energy_pj_per_cycle": 2.0,
+        "interconnect_byte_energy_pj": 1.0,
+        "sram_byte_energy_pj": 5.0,
+        "dram_byte_energy_pj": 120.0
+      },
+      "analog_mac_fraction": 0.817404,
+      "estimated_energy_uj": 4.012313,
+      "digital_baseline_energy_uj": 2.221008,
+      "projected_energy_reduction": -0.806528,
+      "energy_breakdown_pj": {
+        "compute_energy_pj": 330128.64,
+        "peripheral_energy_pj": 2837768.0,
+        "memory_energy_pj": 703680.0,
+        "interconnect_energy_pj": 140736.0
+      }
+    }
+  ],
+  "claim_scope": {
+    "classification": "analytical sensitivity analysis",
+    "measured_hardware": false,
+    "notes": "The range is assumption-driven and must be calibrated against hardware."
+  }
+}

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "heterocore-compiler"
-version = "0.1.0"
+version = "0.2.0"
 description = "Compiler and cost model for mixed analog-digital AI inference"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -12,9 +12,11 @@ license = {text = "MIT"}
 authors = [{name = "WaffleBits"}]
 dependencies = []
 
+[project.optional-dependencies]
+onnx = ["onnx>=1.17"]
+
 [project.scripts]
 heterocore-compile = "heterocore_compiler.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-

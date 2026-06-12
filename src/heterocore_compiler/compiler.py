@@ -39,6 +39,10 @@ def compile_graph(
                 "type": op.op_type,
                 "dimensions": op.dimensions(),
                 "weight_bits": op.weight_bits,
+                "weight_name": op.weight_name,
+                "source_node": op.source_node,
+                "inputs": list(op.inputs),
+                "outputs": list(op.outputs),
                 "macs": op.macs,
                 "target": target,
                 "reason": reason,
@@ -59,6 +63,15 @@ def compile_graph(
         for op in graph.operators
     )
     mapped_traffic = sum(op["estimate"]["memory_traffic_bytes"] for op in compiled_operators)
+    mapped_breakdown = {
+        key: round(sum(op["estimate"][key] for op in compiled_operators), 3)
+        for key in (
+            "compute_energy_pj",
+            "peripheral_energy_pj",
+            "memory_energy_pj",
+            "interconnect_energy_pj",
+        )
+    }
 
     return {
         "schema_version": SCHEMA_VERSION,
@@ -88,6 +101,7 @@ def compile_graph(
             )
             if digital_baseline_traffic
             else 0.0,
+            "energy_breakdown_pj": mapped_breakdown,
         },
         "operators": compiled_operators,
         "claim_scope": {
@@ -96,4 +110,3 @@ def compile_graph(
             "notes": "Values come from the configured cost model, not fabricated silicon.",
         },
     }
-

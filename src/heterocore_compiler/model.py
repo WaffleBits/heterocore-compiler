@@ -13,6 +13,10 @@ class Operator:
     n: int = 1
     weight_bits: int = 16
     accuracy_sensitive: bool = False
+    weight_name: str | None = None
+    source_node: str | None = None
+    inputs: tuple[str, ...] = ()
+    outputs: tuple[str, ...] = ()
 
     @property
     def macs(self) -> int:
@@ -31,6 +35,10 @@ class Operator:
             n=int(dimensions.get("n", 1)),
             weight_bits=int(value.get("weight_bits", 16)),
             accuracy_sensitive=bool(value.get("accuracy_sensitive", False)),
+            weight_name=value.get("weight_name"),
+            source_node=value.get("source_node"),
+            inputs=tuple(value.get("inputs", ())),
+            outputs=tuple(value.get("outputs", ())),
         )
 
     def dimensions(self) -> dict[str, int]:
@@ -48,4 +56,3 @@ class ModelGraph:
             name=str(value["model"]["name"]),
             operators=tuple(Operator.from_dict(op) for op in value["operators"]),
         )
-

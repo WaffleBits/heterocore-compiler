@@ -1,6 +1,6 @@
 {
   "schema_version": "heterocore.execution_plan.v1",
-  "generated_at": "2026-06-12T17:17:09.643559+00:00",
+  "generated_at": "2026-06-12T19:42:05.914332+00:00",
   "model": {
     "name": "tiny-transformer-block",
     "operator_count": 11
@@ -13,6 +13,13 @@
     "clock_mhz": 500,
     "analog_mac_energy_pj": 0.12,
     "digital_mac_energy_pj": 1.8,
+    "dac_conversion_energy_pj": 2.5,
+    "adc_conversion_energy_pj": 35.0,
+    "analog_accumulation_energy_pj": 1.0,
+    "analog_control_energy_pj_per_tile": 500.0,
+    "analog_calibration_energy_pj_per_array": 5000.0,
+    "digital_control_energy_pj_per_cycle": 2.0,
+    "interconnect_byte_energy_pj": 0.25,
     "sram_byte_energy_pj": 5.0,
     "dram_byte_energy_pj": 120.0
   },
@@ -30,12 +37,18 @@
     "analog_mac_fraction": 0.96,
     "estimated_cycles": 41792,
     "estimated_latency_us": 83.584,
-    "estimated_energy_uj": 30.499768,
-    "digital_baseline_energy_uj": 201.580186,
-    "projected_energy_reduction": 0.848697,
+    "estimated_energy_uj": 64.353272,
+    "digital_baseline_energy_uj": 203.023706,
+    "projected_energy_reduction": 0.683026,
     "mapped_memory_traffic_bytes": 2097408,
     "digital_baseline_memory_traffic_bytes": 2490624,
-    "projected_memory_traffic_reduction": 0.157879
+    "projected_memory_traffic_reduction": 0.157879,
+    "energy_breakdown_pj": {
+      "compute_energy_pj": 20012728.32,
+      "peripheral_energy_pj": 33329152.0,
+      "memory_energy_pj": 10487040.0,
+      "interconnect_energy_pj": 524352.0
+    }
   },
   "operators": [
     {
@@ -48,6 +61,10 @@
         "n": 256
       },
       "weight_bits": 8,
+      "weight_name": null,
+      "source_node": null,
+      "inputs": [],
+      "outputs": [],
       "macs": 0,
       "target": "digital",
       "reason": "operator is not supported by the analog backend",
@@ -55,8 +72,10 @@
         "cycles": 128,
         "latency_us": 0.256,
         "compute_energy_pj": 58982.4,
+        "peripheral_energy_pj": 256.0,
         "memory_energy_pj": 328960.0,
-        "total_energy_pj": 387942.4,
+        "interconnect_energy_pj": 16448.0,
+        "total_energy_pj": 404646.4,
         "weight_bytes": 0,
         "memory_traffic_bytes": 65792
       }
@@ -71,6 +90,10 @@
         "n": 256
       },
       "weight_bits": 4,
+      "weight_name": null,
+      "source_node": null,
+      "inputs": [],
+      "outputs": [],
       "macs": 8388608,
       "target": "analog",
       "reason": "matrix operation satisfies analog mapping policy",
@@ -78,8 +101,10 @@
         "cycles": 2048,
         "latency_us": 4.096,
         "compute_energy_pj": 1006632.96,
+        "peripheral_energy_pj": 2766368.0,
         "memory_energy_pj": 655360.0,
-        "total_energy_pj": 1661992.96,
+        "interconnect_energy_pj": 32768.0,
+        "total_energy_pj": 4461128.96,
         "weight_bytes": 32768,
         "memory_traffic_bytes": 131072
       }
@@ -94,6 +119,10 @@
         "n": 256
       },
       "weight_bits": 4,
+      "weight_name": null,
+      "source_node": null,
+      "inputs": [],
+      "outputs": [],
       "macs": 8388608,
       "target": "analog",
       "reason": "matrix operation satisfies analog mapping policy",
@@ -101,8 +130,10 @@
         "cycles": 2048,
         "latency_us": 4.096,
         "compute_energy_pj": 1006632.96,
+        "peripheral_energy_pj": 2766368.0,
         "memory_energy_pj": 655360.0,
-        "total_energy_pj": 1661992.96,
+        "interconnect_energy_pj": 32768.0,
+        "total_energy_pj": 4461128.96,
         "weight_bytes": 32768,
         "memory_traffic_bytes": 131072
       }
@@ -117,6 +148,10 @@
         "n": 256
       },
       "weight_bits": 4,
+      "weight_name": null,
+      "source_node": null,
+      "inputs": [],
+      "outputs": [],
       "macs": 8388608,
       "target": "analog",
       "reason": "matrix operation satisfies analog mapping policy",
@@ -124,8 +159,10 @@
         "cycles": 2048,
         "latency_us": 4.096,
         "compute_energy_pj": 1006632.96,
+        "peripheral_energy_pj": 2766368.0,
         "memory_energy_pj": 655360.0,
-        "total_energy_pj": 1661992.96,
+        "interconnect_energy_pj": 32768.0,
+        "total_energy_pj": 4461128.96,
         "weight_bytes": 32768,
         "memory_traffic_bytes": 131072
       }
@@ -140,6 +177,10 @@
         "n": 128
       },
       "weight_bits": 8,
+      "weight_name": null,
+      "source_node": null,
+      "inputs": [],
+      "outputs": [],
       "macs": 4194304,
       "target": "digital",
       "reason": "operator is marked accuracy-sensitive",
@@ -147,8 +188,10 @@
         "cycles": 16384,
         "latency_us": 32.768,
         "compute_energy_pj": 7549747.2,
+        "peripheral_energy_pj": 32768.0,
         "memory_energy_pj": 655360.0,
-        "total_energy_pj": 8205107.2,
+        "interconnect_energy_pj": 32768.0,
+        "total_energy_pj": 8270643.2,
         "weight_bytes": 32768,
         "memory_traffic_bytes": 131072
       }
@@ -163,6 +206,10 @@
         "n": 128
       },
       "weight_bits": 16,
+      "weight_name": null,
+      "source_node": null,
+      "inputs": [],
+      "outputs": [],
       "macs": 0,
       "target": "digital",
       "reason": "operator is not supported by the analog backend",
@@ -170,8 +217,10 @@
         "cycles": 64,
         "latency_us": 0.128,
         "compute_energy_pj": 29491.2,
+        "peripheral_energy_pj": 128.0,
         "memory_energy_pj": 327680.0,
-        "total_energy_pj": 357171.2,
+        "interconnect_energy_pj": 16384.0,
+        "total_energy_pj": 373683.2,
         "weight_bytes": 0,
         "memory_traffic_bytes": 65536
       }
@@ -186,6 +235,10 @@
         "n": 256
       },
       "weight_bits": 4,
+      "weight_name": null,
+      "source_node": null,
+      "inputs": [],
+      "outputs": [],
       "macs": 8388608,
       "target": "analog",
       "reason": "matrix operation satisfies analog mapping policy",
@@ -193,8 +246,10 @@
         "cycles": 2048,
         "latency_us": 4.096,
         "compute_energy_pj": 1006632.96,
+        "peripheral_energy_pj": 2766368.0,
         "memory_energy_pj": 655360.0,
-        "total_energy_pj": 1661992.96,
+        "interconnect_energy_pj": 32768.0,
+        "total_energy_pj": 4461128.96,
         "weight_bytes": 32768,
         "memory_traffic_bytes": 131072
       }
@@ -209,6 +264,10 @@
         "n": 256
       },
       "weight_bits": 16,
+      "weight_name": null,
+      "source_node": null,
+      "inputs": [],
+      "outputs": [],
       "macs": 0,
       "target": "digital",
       "reason": "operator is not supported by the analog backend",
@@ -216,8 +275,10 @@
         "cycles": 128,
         "latency_us": 0.256,
         "compute_energy_pj": 58982.4,
+        "peripheral_energy_pj": 256.0,
         "memory_energy_pj": 655360.0,
-        "total_energy_pj": 714342.4,
+        "interconnect_energy_pj": 32768.0,
+        "total_energy_pj": 747366.4,
         "weight_bytes": 0,
         "memory_traffic_bytes": 131072
       }
@@ -232,6 +293,10 @@
         "n": 1024
       },
       "weight_bits": 4,
+      "weight_name": null,
+      "source_node": null,
+      "inputs": [],
+      "outputs": [],
       "macs": 33554432,
       "target": "analog",
       "reason": "matrix operation satisfies analog mapping policy",
@@ -239,8 +304,10 @@
         "cycles": 8192,
         "latency_us": 16.384,
         "compute_energy_pj": 4026531.84,
+        "peripheral_energy_pj": 11065472.0,
         "memory_energy_pj": 1638400.0,
-        "total_energy_pj": 5664931.84,
+        "interconnect_energy_pj": 81920.0,
+        "total_energy_pj": 16812323.84,
         "weight_bytes": 131072,
         "memory_traffic_bytes": 327680
       }
@@ -255,6 +322,10 @@
         "n": 1024
       },
       "weight_bits": 16,
+      "weight_name": null,
+      "source_node": null,
+      "inputs": [],
+      "outputs": [],
       "macs": 0,
       "target": "digital",
       "reason": "operator is not supported by the analog backend",
@@ -262,8 +333,10 @@
         "cycles": 512,
         "latency_us": 1.024,
         "compute_energy_pj": 235929.6,
+        "peripheral_energy_pj": 1024.0,
         "memory_energy_pj": 2621440.0,
-        "total_energy_pj": 2857369.6,
+        "interconnect_energy_pj": 131072.0,
+        "total_energy_pj": 2989465.6,
         "weight_bytes": 0,
         "memory_traffic_bytes": 524288
       }
@@ -278,6 +351,10 @@
         "n": 256
       },
       "weight_bits": 4,
+      "weight_name": null,
+      "source_node": null,
+      "inputs": [],
+      "outputs": [],
       "macs": 33554432,
       "target": "analog",
       "reason": "matrix operation satisfies analog mapping policy",
@@ -285,8 +362,10 @@
         "cycles": 8192,
         "latency_us": 16.384,
         "compute_energy_pj": 4026531.84,
+        "peripheral_energy_pj": 11163776.0,
         "memory_energy_pj": 1638400.0,
-        "total_energy_pj": 5664931.84,
+        "interconnect_energy_pj": 81920.0,
+        "total_energy_pj": 16910627.84,
         "weight_bytes": 131072,
         "memory_traffic_bytes": 327680
       }

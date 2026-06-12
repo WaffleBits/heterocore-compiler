@@ -10,6 +10,13 @@ class HardwareConfig:
     clock_mhz: int = 500
     analog_mac_energy_pj: float = 0.12
     digital_mac_energy_pj: float = 1.8
+    dac_conversion_energy_pj: float = 2.5
+    adc_conversion_energy_pj: float = 35.0
+    analog_accumulation_energy_pj: float = 1.0
+    analog_control_energy_pj_per_tile: float = 500.0
+    analog_calibration_energy_pj_per_array: float = 5_000.0
+    digital_control_energy_pj_per_cycle: float = 2.0
+    interconnect_byte_energy_pj: float = 0.25
     sram_byte_energy_pj: float = 5.0
     dram_byte_energy_pj: float = 120.0
 
@@ -27,4 +34,3 @@ class PartitionPolicy:
         result = asdict(self)
         result["supported_analog_ops"] = list(self.supported_analog_ops)
         return result
-
