@@ -28,6 +28,8 @@ flowchart LR
 - Explicit DAC, ADC, accumulation, calibration, control, and interconnect energy.
 - A JSON Schema-backed cross-repository execution plan.
 - Automated tests and a reproducible sample workload.
+- Explainable memory-centric decode placement for model weights, KV state,
+  summaries, gathers, normalization, and projection/MLP execution.
 
 ## Checked-In Evidence
 
@@ -49,6 +51,12 @@ The ONNX transformer result is deliberately less favorable: 81.7% of MACs map
 to analog, but the nominal peripheral-aware model projects only a 7.4% energy
 reduction. `results/energy_sensitivity.json` shows how that conclusion changes
 under optimistic, nominal, and conservative converter/control assumptions.
+
+`results/qwen_decode.plan.json` adds the memory-centric path. For an 8,192-token
+context at batch 1, it places 229,376 bytes of block summaries in local SRAM,
+pages the 58,720,256-byte INT4 KV cache externally, allocates a 2 MiB active
+weight tile, and routes 14,680,064 selected KV bytes through the gather engine.
+All ten decisions include a human-readable reason.
 
 ## Quick Start
 
@@ -74,6 +82,23 @@ heterocore-compile examples/tiny_char_transformer.onnx \
 
 The command prints the analog MAC fraction and projected energy reduction. The
 full assumptions and per-operator decisions are saved in the output plan.
+
+Compile the checked Qwen2.5-1.5B-Instruct decode placement:
+
+```bash
+heterocore-compile-decode \
+  --context 8192 \
+  --batch 1 \
+  --weight-bits 4 \
+  --kv-bits 4 \
+  --selected-block-fraction 0.25 \
+  --output results/qwen_decode.plan.json
+```
+
+The decode plan explains where weights, KV pages, block summaries, active
+vectors, selection, gather, fused normalization, and matrix-vector work are
+placed. It optimizes logical bytes per output token under a local-SRAM
+constraint; it is an analytical plan rather than measured hardware behavior.
 
 ## Input Format
 

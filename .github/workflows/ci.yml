@@ -26,3 +26,8 @@ jobs:
           python tools/run_energy_sensitivity.py
           examples/tiny_char_transformer.onnx
           -o build/energy_sensitivity.json
+      - run: >
+          heterocore-compile-decode
+          --context 8192
+          --batch 1
+          --output build/qwen_decode.plan.json

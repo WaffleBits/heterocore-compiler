@@ -1,10 +1,38 @@
 import unittest
 
-from heterocore_compiler import HardwareConfig, PartitionPolicy, compile_graph
+from heterocore_compiler import (
+    DecodePolicy,
+    HardwareConfig,
+    PartitionPolicy,
+    compile_decode_plan,
+    compile_graph,
+)
 from heterocore_compiler.model import ModelGraph, Operator
 
 
 class CompilerTests(unittest.TestCase):
+    def test_decode_plan_prioritizes_summaries_and_fused_vectors(self):
+        plan = compile_decode_plan(context_tokens=8192, batch_size=1)
+        by_name = {decision["object"]: decision for decision in plan["decisions"]}
+        self.assertEqual(by_name["kv_block_summaries"]["target"], "local_sram")
+        self.assertEqual(
+            by_name["residual_rmsnorm"]["target"],
+            "fused_vector_engine",
+        )
+        self.assertEqual(plan["summary"]["decision_count"], 10)
+
+    def test_decode_plan_moves_large_summary_table_external(self):
+        plan = compile_decode_plan(
+            policy=DecodePolicy(local_sram_bytes=64 * 1024),
+            context_tokens=32768,
+            batch_size=16,
+        )
+        by_name = {decision["object"]: decision for decision in plan["decisions"]}
+        self.assertEqual(
+            by_name["kv_block_summaries"]["target"],
+            "external_memory",
+        )
+
     def test_partitions_supported_large_matrix(self):
         graph = ModelGraph(
             "test",
