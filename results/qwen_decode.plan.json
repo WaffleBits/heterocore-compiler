@@ -1,0 +1,110 @@
+{
+  "schema_version": "heterocore.decode_plan.v1",
+  "generated_at": "2026-06-14T10:35:59.540662+00:00",
+  "model": {
+    "name": "Qwen2.5-1.5B-Instruct",
+    "parameter_count": 1543714816,
+    "hidden_size": 1536,
+    "intermediate_size": 8960,
+    "num_hidden_layers": 28,
+    "num_key_value_heads": 2,
+    "head_dim": 128
+  },
+  "workload": {
+    "context_tokens": 8192,
+    "batch_size": 1
+  },
+  "policy": {
+    "weight_bits": 4,
+    "kv_bits": 4,
+    "block_size": 32,
+    "selected_block_fraction": 0.25,
+    "summary_dimensions": 16,
+    "summary_bits": 8,
+    "local_sram_bytes": 8388608
+  },
+  "summary": {
+    "weight_bytes": 771857408,
+    "kv_capacity_bytes": 58720256,
+    "summary_bytes": 229376,
+    "selected_kv_bytes": 14680064,
+    "decision_count": 10
+  },
+  "decisions": [
+    {
+      "object": "model_weights",
+      "kind": "state",
+      "target": "external_memory",
+      "bytes": 771857408,
+      "reason": "Full packed weights exceed local SRAM and stream by operator."
+    },
+    {
+      "object": "active_weight_tiles",
+      "kind": "state",
+      "target": "local_sram",
+      "bytes": 2097152,
+      "reason": "Double-buffered tiles overlap external reads with execution."
+    },
+    {
+      "object": "kv_cache",
+      "kind": "state",
+      "target": "paged_external_memory",
+      "bytes": 58720256,
+      "reason": "Context-scale KV state exceeds local capacity."
+    },
+    {
+      "object": "kv_block_summaries",
+      "kind": "state",
+      "target": "local_sram",
+      "bytes": 229376,
+      "reason": "Compact summaries are prioritized because they gate full KV reads."
+    },
+    {
+      "object": "decode_vectors",
+      "kind": "state",
+      "target": "local_sram",
+      "bytes": 12288,
+      "reason": "Residual, normalized, query, and reduction vectors are immediately reused."
+    },
+    {
+      "object": "qk_block_scoring",
+      "kind": "operator",
+      "target": "quantized_selector",
+      "bytes": 229376,
+      "reason": "Low-precision summary scoring happens before expensive KV gather."
+    },
+    {
+      "object": "topk_block_selection",
+      "kind": "operator",
+      "target": "streaming_topk",
+      "bytes": 0,
+      "reason": "Streaming insertion top-k avoids a complete score sort."
+    },
+    {
+      "object": "selected_kv_gather",
+      "kind": "operator",
+      "target": "dma_gather_engine",
+      "bytes": 14680064,
+      "reason": "Only selected blocks move into the exact attention datapath."
+    },
+    {
+      "object": "residual_rmsnorm",
+      "kind": "operator",
+      "target": "fused_vector_engine",
+      "bytes": 9216,
+      "reason": "Fusion removes an intermediate external-memory round trip."
+    },
+    {
+      "object": "projections_and_mlp",
+      "kind": "operator",
+      "target": "digital_matrix_vector_engine",
+      "bytes": 771857408,
+      "reason": "Packed matrix-vector execution remains digital until analog error is validated."
+    }
+  ],
+  "objective": "minimize logical bytes moved per output token subject to local capacity",
+  "claim_scope": {
+    "classification": "analytical placement",
+    "measured_hardware": false
+  }
+}

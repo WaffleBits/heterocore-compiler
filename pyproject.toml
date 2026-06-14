@@ -17,6 +17,7 @@ onnx = ["onnx>=1.17"]
 
 [project.scripts]
 heterocore-compile = "heterocore_compiler.cli:main"
+heterocore-compile-decode = "heterocore_compiler.decode:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
