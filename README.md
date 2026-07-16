@@ -9,6 +9,10 @@ versioned execution plan consumed by the other HeteroCore repositories.
 > Status: architecture simulation and digital implementation prototype. All
 > performance and energy values are projections, not measured silicon results.
 
+![Projected energy for the tiny transformer block](assets/projected_energy.png)
+
+Analytical cost-model projection for the checked-in `tiny_transformer.plan.json`. The HeteroCore bar stacks the projected peripheral, compute, memory, and interconnect energy and sits beside the all-digital baseline from the same plan. These are cost-model outputs, not measured silicon.
+
 ## System Context
 
 ```mermaid
